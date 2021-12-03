@@ -1,4 +1,5 @@
 const Projects = require('../projects/projects-model')
+const { projectSchema } = require('../schemas')
 
 function logger(req, res, next) {
   console.log(`[${new Date().toISOString()}] ${req.method} request to ${req.url}`)
@@ -29,8 +30,25 @@ async function projectIdChecker(req, res, next) {
   }
 }
 
+async function validateProject(req, res, next) {
+  try {
+    const validated = await projectSchema.validate(req.body, {
+      strict: false,
+      stripUnknown: true,
+    })
+    req.body = validated
+    next()
+  } catch (err) {
+    next({
+      status: 400, 
+      message: err.message,
+    })
+  }
+}
+
 module.exports = {
   handleError,
   logger,
   projectIdChecker,
+  validateProject,
 }
