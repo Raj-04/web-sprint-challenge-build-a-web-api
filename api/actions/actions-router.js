@@ -40,6 +40,15 @@ router.put('/:id', checkCompleted, checkActionId, async (req, res, next) => {
   }
 })
 
+router.delete('/:id', checkActionId, async (req, res, next) => {
+  try {
+    await Actions.remove(req.params.id)
+    res.status(200).send('deleted actions')
+  } catch (err) {
+    next(err)
+  }
+})
+
 router.use(handleError)
 
 module.exports = router
