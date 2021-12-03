@@ -30,6 +30,22 @@ router.post('/', validateProject, async (req, res, next) => {
   }
 })
 
+router.put('/:id', validateProject, projectIdChecker, async (req, res, next) => {
+  if (req.body.completed === undefined) {
+    next({
+      status: 400,
+      message: 'missing required fields'
+    })
+  } else {
+    try {
+      const updatedProject = await Projects.update(req.params.id, req.body)
+      res.status(200).json(updatedProject)
+    } catch (err) {
+      next(err)
+    }
+  }
+})
+
 router.use(handleError)
 
 module.exports = router
