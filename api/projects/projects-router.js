@@ -46,6 +46,15 @@ router.put('/:id', validateProject, projectIdChecker, async (req, res, next) => 
   }
 })
 
+router.delete('/:id', projectIdChecker, async (req, res, next) => {
+  try {
+    await Projects.remove(req.params.id)
+    res.status(200).send('Deleted Project')
+  } catch (err) {
+    next(err)
+  }
+})
+
 router.use(handleError)
 
 module.exports = router
