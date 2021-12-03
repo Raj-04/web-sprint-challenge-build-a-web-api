@@ -2,8 +2,8 @@ const express = require('express')
 const Projects = require('./projects-model')
 const {
   handleError,
+  projectIdChecker,
 } = require('./projects-middleware')
-const server = require('../server')
 
 const router = express.Router()
 
@@ -14,6 +14,10 @@ router.get('/', async (req, res, next) => {
   } catch (err) {
     next(err)
   }
+})
+
+router.get('/:id', projectIdChecker, (req, res, next) => {
+  res.status(200).json(req.project)
 })
 
 router.use(handleError)

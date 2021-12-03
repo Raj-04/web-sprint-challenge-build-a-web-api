@@ -12,7 +12,25 @@ function handleError(err, req, res, next) {
   })
 }
 
+async function projectIdChecker(req, res, next) {
+  try {
+    const project = await Projects.get(req.params.id || req.body.project_id)
+    if(!project) {
+      next({
+        status: 404,
+        message: 'project not found',
+      })
+    } else {
+      req.project = project
+      next()
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
 module.exports = {
   handleError,
   logger,
+  projectIdChecker,
 }
